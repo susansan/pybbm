@@ -12,6 +12,7 @@ from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now as tznow
+from django.core.validators import FileExtensionValidator
 
 from pybb.compat import get_user_model_path, get_username_field, get_atomic_func, slugify
 from pybb import defaults
@@ -395,6 +396,7 @@ class Attachment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name=_('Post'), related_name='attachments')
     size = models.IntegerField(_('Size'))
     file = models.FileField(_('File'),
+                            validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])],
                             upload_to=FilePathGenerator(to=defaults.PYBB_ATTACHMENT_UPLOAD_TO))
 
     def save(self, *args, **kwargs):

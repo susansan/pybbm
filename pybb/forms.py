@@ -33,7 +33,8 @@ class AttachmentForm(forms.ModelForm):
             raise forms.ValidationError(ugettext('Attachment is too big'))
         return self.cleaned_data['file']
 
-AttachmentFormSet = inlineformset_factory(Post, Attachment, extra=1, form=AttachmentForm)
+
+AttachmentFormSet = inlineformset_factory(Post, Attachment, extra=3, form=AttachmentForm)
 
 
 class PollAnswerForm(forms.ModelForm):

@@ -25,20 +25,22 @@
   <script src="{% static 'markitup/ajax_csrf.js' %}"></script>
   <script src="{% static 'sceditor-2.1.3/minified/sceditor.min.js' %}"></script>
 
-  <script src="{% static 'pybb/js/pybbjs.js' %}"></script>
   <script src="{% static 'sceditor-2.1.3/minified/icons/monocons.js' %}"></script>
   <script src="{% static 'sceditor-2.1.3/minified/icons/material.js' %}"></script>
   <script src="{% static 'sceditor-2.1.3/minified/formats/bbcode.js' %}"></script>
+  <script src="{% static 'pybb/js/pybbjs.js' %}"></script>
 
   <script>
-  var textarea = document.getElementById('id_body');
-  sceditor.create(textarea, {
-    format: 'bbcode',
-    icons: 'material',
-    toolbar: 'bold,italic,size,image,link,source',
-    style: '{% static 'sceditor-2.1.3/minified/themes/square.min.css' %}'
-  });
+    var textarea = document.getElementById('id_body');
+    if(textarea !== null && textarea !== '') {
+      sceditor.create(textarea, {
+        format: 'bbcode',
+        icons: 'material',
+        emoticonsEnabled: false,
+        toolbar: 'bold,italic,size,image,link,quote,source',
+        style: '{% static 'sceditor-2.1.3/minified/themes/square.min.css' %}'
+      });
+    }
   </script>
-
 {% endblock %}
 

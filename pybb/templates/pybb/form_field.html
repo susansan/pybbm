@@ -7,7 +7,4 @@
         </label>
     {% endif %}
     {% bootstrap_field field show_help=False show_label=False%}
-    {% for error in field.errors %}
-        <span class="field-errors">{{ field.errors }}</span>
-    {% endfor %}
 </div>
