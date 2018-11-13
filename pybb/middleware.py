@@ -21,23 +21,6 @@ else:  # pragma: no cover
     MiddlewareParentClass = MiddlewareMixin
 
 
-CHECK_URLS = [compile('forum'.lstrip('/'))]
-
-
-class ForumPermissionMiddleware(MiddlewareParentClass):
-    """
-    Make sure forum only accessible to specific group
-    """
-    def process_request(self, request):
-        if not request.user.is_authenticated:
-            path = request.path_info.lstrip('/')
-            if any(m.match(path) for m in CHECK_URLS):
-                base_url = reverse('account_login')
-                base_url = '{}?next={}'.format(
-                    base_url, request.path)
-                return HttpResponseRedirect(base_url)
-
-
 class PybbMiddleware(MiddlewareParentClass):
     def process_request(self, request):
         if is_authenticated(request.user):
