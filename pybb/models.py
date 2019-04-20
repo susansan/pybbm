@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
+from django.conf import settings
 from django.core.exceptions import ValidationError
 try:
     from django.core.urlresolvers import reverse
@@ -170,6 +172,7 @@ class ForumSubscription(models.Model):
             topics = Topic.objects.filter(forum=self.forum, subscribers=self.user)
             self.user.subscriptions.remove(*topics)
         super(ForumSubscription, self).delete(**kwargs)
+
 
 @python_2_unicode_compatible
 class Topic(models.Model):
@@ -395,9 +398,10 @@ class Attachment(models.Model):
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name=_('Post'), related_name='attachments')
     size = models.IntegerField(_('Size'))
-    file = models.FileField(_('File'),
-                            validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])],
-                            upload_to=FilePathGenerator(to=defaults.PYBB_ATTACHMENT_UPLOAD_TO))
+    file = models.FileField(
+        _('File'),
+        upload_to='forum/attachments/%Y/%m/%d/',
+    )
 
     def save(self, *args, **kwargs):
         self.size = self.file.size
