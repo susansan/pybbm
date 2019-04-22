@@ -24,6 +24,16 @@ username_field = compat.get_username_field()
 
 
 class AttachmentForm(forms.ModelForm):
+
+    file = forms.FileField(
+        widget=forms.FileInput(attrs={'class': ''}),
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=settings.PYBB_ATTACHMENT_EXTENSIONS
+            )
+        ],
+    )
+
     class Meta(object):
         model = Attachment
         fields = ('file', )
