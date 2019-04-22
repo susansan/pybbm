@@ -5,8 +5,10 @@ import re
 import inspect
 
 import django
+from django.conf import settings
 from django import forms
 from django.core.exceptions import FieldError, PermissionDenied
+from django.core.validators import FileExtensionValidator
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.utils.decorators import method_decorator
 from django.utils.text import Truncator
@@ -44,7 +46,7 @@ class AttachmentForm(forms.ModelForm):
         return self.cleaned_data['file']
 
 
-AttachmentFormSet = inlineformset_factory(Post, Attachment, extra=3, form=AttachmentForm)
+AttachmentFormSet = inlineformset_factory(Post, Attachment, form=AttachmentForm, extra=1, max_num=3, validate_max=True)
 
 
 class PollAnswerForm(forms.ModelForm):
@@ -104,6 +106,8 @@ class PostForm(forms.ModelForm):
 
         super(PostForm, self).__init__(**kwargs)
 
+        self.fields['body'].error_messages = {'required': 'Message should not be empty here'}
+
         # remove topic specific fields
         if not (self.forum or (self.instance.pk and (self.instance.topic.head == self.instance))):
             del self.fields['name']
@@ -126,8 +130,8 @@ class PostForm(forms.ModelForm):
         if defaults.PYBB_BODY_VALIDATOR:
             defaults.PYBB_BODY_VALIDATOR(user, body)
 
-        for cleaner in defaults.PYBB_BODY_CLEANERS:
-            body = util.get_body_cleaner(cleaner)(user, body)
+        # for cleaner in defaults.PYBB_BODY_CLEANERS:
+        #     body = util.get_body_cleaner(cleaner)(user, body)
         return body
 
     def clean(self):
